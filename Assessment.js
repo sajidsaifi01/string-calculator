@@ -1,7 +1,7 @@
 
 const add = (numbers) => {
     if (numbers === '') {
-      return 0;
+        return 0;
     }
     let delimiter = ',';
     if (numbers.startsWith('//')) {
@@ -11,7 +11,21 @@ const add = (numbers) => {
     }
 
     const numArray = numbers.split(new RegExp(`[${delimiter}\n]`));
-    return numArray.reduce((sum, num) => sum + parseInt(num, 10), 0);
+    const negatives = [];
+
+    const sum = numArray.reduce((total, num) => {
+        const parsedNum = parseInt(num, 10);
+        if (parsedNum < 0) {
+            negatives.push(parsedNum);
+        }
+        return total + parsedNum;
+    }, 0);
+
+    if (negatives.length > 0) {
+        throw new Error(`Negative numbers not allowed: ${negatives.join(', ')}`);
+    }
+
+    return sum;
 }
 
 module.exports = { add };
